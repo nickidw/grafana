@@ -71,7 +71,6 @@ func TestIntegrationGetPublicDashboard(t *testing.T) {
 		_, _, err = dashboardStore.GetPublicDashboard("abc1234")
 		require.Error(t, models.ErrDashboardNotFound, err)
 	})
-
 }
 
 // GetPublicDashboardConfig
@@ -160,6 +159,7 @@ func TestIntegrationSavePublicDashboardConfig(t *testing.T) {
 
 		// verify we didn't update all dashboards
 		pubdash2, err := dashboardStore.GetPublicDashboardConfig(savedDashboard2.OrgId, savedDashboard2.Uid)
+ 		require.NoError(t, err)
 		assert.False(t, pubdash2.IsEnabled)
 	})
 
