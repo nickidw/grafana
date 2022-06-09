@@ -140,7 +140,8 @@ func (s *standardStorageService) Upload(ctx context.Context, user *models.Signed
 		return ErrUnsupportedStorage
 	}
 
-	validationResult := s.validateUploadRequest(ctx, user, req)
+	storagePath := strings.TrimPrefix(req.Path, RootUpload)
+	validationResult := s.validateUploadRequest(ctx, user, req, storagePath)
 	if !validationResult.ok {
 		grafanaStorageLogger.Warn("file upload validation failed", "filetype", req.MimeType, "path", req.Path, "reason", validationResult.reason)
 		return ErrValidationFailed
@@ -152,13 +153,6 @@ func (s *standardStorageService) Upload(ctx context.Context, user *models.Signed
 	}
 
 	grafanaStorageLogger.Info("uploading a file", "filetype", req.MimeType, "path", req.Path)
-
-	storagePath := strings.TrimPrefix(req.Path, RootUpload)
-
-	if err := filestorage.ValidatePath(storagePath); err != nil {
-		grafanaStorageLogger.Info("uploading file failed due to invalid path", "filetype", req.MimeType, "path", req.Path, "err", err)
-		return ErrValidationFailed
-	}
 
 	if !req.OverwriteExistingFile {
 		file, err := upload.Get(ctx, storagePath)

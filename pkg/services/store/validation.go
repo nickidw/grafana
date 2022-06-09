@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"path/filepath"
 
+	"github.com/grafana/grafana/pkg/infra/filestorage"
 	"github.com/grafana/grafana/pkg/models"
 )
 
@@ -62,10 +63,13 @@ func (s *standardStorageService) validateImage(ctx context.Context, user *models
 	return success()
 }
 
-func (s *standardStorageService) validateUploadRequest(ctx context.Context, user *models.SignedInUser, req *UploadRequest) validationResult {
+func (s *standardStorageService) validateUploadRequest(ctx context.Context, user *models.SignedInUser, req *UploadRequest, storagePath string) validationResult {
 	// TODO: validateSize
-	// TODO: validatePath
 	// TODO: validateProperties
+
+	if err := filestorage.ValidatePath(storagePath); err != nil {
+		return fail("path validation failed: " + err.Error())
+	}
 
 	switch req.EntityType {
 	case EntityTypeFolder:
