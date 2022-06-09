@@ -157,7 +157,7 @@ func (s *standardStorageService) Upload(ctx context.Context, user *models.Signed
 
 	if err := filestorage.ValidatePath(storagePath); err != nil {
 		grafanaStorageLogger.Info("uploading file failed due to invalid path", "filetype", req.MimeType, "path", req.Path, "err", err)
-		return ErrInvalidPath
+		return ErrValidationFailed
 	}
 
 	if !req.OverwriteExistingFile {
