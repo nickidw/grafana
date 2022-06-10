@@ -43,7 +43,7 @@ type StorageService interface {
 
 	Delete(ctx context.Context, user *models.SignedInUser, path string) error
 
-	validateUploadRequest(ctx context.Context, user *models.SignedInUser, req *UploadRequest) validationResult
+	validateUploadRequest(ctx context.Context, user *models.SignedInUser, req *UploadRequest, relativePath string) validationResult
 	sanitizeUploadRequest(ctx context.Context, user *models.SignedInUser, req *UploadRequest) error
 }
 
